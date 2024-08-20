@@ -1,3 +1,6 @@
+# Importa o módulo random, que contém funções para gerar números aleatórios
+import random
+
 # Função principal do menu
 def menu():
   # Exibe as opções de módulos disponíveis
@@ -90,7 +93,7 @@ def menu_texto():
 
     #Chama a função correspondente à funcionalidade escolhida
     if escolha == 1:
-        mofificar_texto()
+        modificar_texto()
     elif escolha == 2:
         contagem_ocorrencia()
     elif escolha == 3:
@@ -195,9 +198,11 @@ def operacoes_simples():
 def tabuada():
     # Solicita ao usuário o valor para a tabuada
     n = int(input('Qual será o valor da tabuada: '))
+    # Solicita ao usuário até qual número a tabuada deve ser calculada
+    limite = int(input('Até qual número deseja calcular a tabuada: '))
 
-    # Loop para calcular e exibir a tabuada de 0 a 10
-    for v in range(11):
+    # Loop para calcular e exibir a tabuada até o valor fornecido pelo usuário
+    for v in range(1, limite + 1):
         print(f'{n} x {v} = {v * n}')
 
 # Função para calcular o fatorial de um número
@@ -217,29 +222,21 @@ def fatorial():
     # Exibe o resultado do fatorial
     print('Resultado: ', resultado)
 
-# Função para encontrar o n-ésimo termo da sequência de Fibonacci
+# Função para calcular a sequência de Fibonacci dos primeiros n números
 def fibonacci():
-    # Solicita ao usuário o termo da sequência de Fibonacci que deseja encontrar
-    n = int(input('Qual termo deseja encontrar: '))
+    # Solicita ao usuário o número de termos da sequência de Fibonacci que deseja calcular
+    n = int(input('Quantos termos deseja calcular na sequência de Fibonacci: '))
 
-    # Inicializa os dois primeiros termos da sequência
-    ultimo, penultimo = 1, 1
+    # Inicializa a lista com os dois primeiros termos da sequência
+    sequencia = [1, 1]
 
-    # Verifica se o termo desejado é o primeiro ou o segundo
-    if n == 1 or n == 2:
-        termo = 1
-    else:
-        # Inicializa o contador a partir do terceiro termo
-        cont = 3
-        # Loop para calcular o n-ésimo termo da sequência de Fibonacci
-        while cont <= n:
-            termo = ultimo + penultimo  # Calcula o próximo termo
-            penultimo = ultimo  # Atualiza o penúltimo termo
-            ultimo = termo  # Atualiza o último termo
-            cont += 1  # Incrementa o contador
+    # Calcula os termos da sequência até o n-ésimo termo
+    for i in range(2, n):
+        proximo_termo = sequencia[-1] + sequencia[-2]
+        sequencia.append(proximo_termo)
 
-    # Exibe o resultado do n-ésimo termo da sequência de Fibonacci
-    print('Resultado: ', termo)
+    # Exibe a sequência de Fibonacci
+    print('Sequência de Fibonacci:', sequencia[:n])
 
 # Função para somar duas matrizes
 def matrizes():
@@ -326,7 +323,365 @@ def orcamento_mensal():
     for item in itens:
         print(item)
 
+# Módulo texto
 
+# Função para modificar o texto de acordo com a escolha do usuário
+def modificar_texto():
+    # Solicita ao usuário que insira o texto a ser modificado
+    texto = input('Digite o texto que deseja modificar: ')
+    # Solicita ao usuário que escolha o tipo de modificação
+    modificar = int(input('''Qual modificação deseja realizar no texto:
+    1 - Caixa alta
+    2 - Caixa baixa
+    3 - Capitalizado
+    '''))
+
+    # Verifica a escolha do usuário e aplica a modificação correspondente
+    if modificar == 1:
+        # Converte o texto para caixa alta
+        print(texto.upper())
+    elif modificar == 2:
+        # Converte o texto para caixa baixa
+        print(texto.lower())
+    else:
+        # Capitaliza o texto (primeira letra maiúscula, restante minúsculas)
+        print(texto.capitalize())
+
+# Função para contar a ocorrência de uma palavra em um texto
+def contagem_ocorrencia():
+    # Solicita ao usuário que insira o texto a ser analisado e converte para minúsculas
+    texto = input('Digite o texto que deseja analisar: ').lower()
+    # Solicita ao usuário que insira a palavra a ser contada e converte para minúsculas
+    palavra = input('Qual palavra deseja ver a contagem de ocorrência: ').lower()
+    # Divide o texto em palavras usando o espaço como delimitador
+    analise = texto.split(' ')
+
+    # Conta e exibe o número de ocorrências da palavra no texto
+    print(f'A palavra {palavra} aparece {analise.count(palavra)} no texto ')
+
+# Função para recortar partes de um texto com base em um termo de busca
+def recorte_texto():
+    # Solicita ao usuário que insira o texto a ser recortado e converte para minúsculas
+    texto = input('Digite o texto que deseja recortar: ').lower()
+    # Solicita ao usuário que insira o termo de busca
+    termo = input('Qual termo deseja buscar: ')
+
+    # Inicializa a posição de busca
+    posicao = 0
+
+    while True:
+        # Encontra a posição do termo no texto a partir da posição atual
+        posicao = texto.find(termo, posicao)
+
+        # Se o termo não for encontrado, sai do loop
+        if posicao == -1: 
+            break
+
+        # Calcula a posição inicial e final do recorte, garantindo que não ultrapasse os limites do texto
+        inicio = max(0, posicao - 3)
+        fim = min(len(texto), posicao + len(termo) + 3)
+
+        # Exibe a ocorrência encontrada com um recorte de 3 caracteres antes e depois do termo
+        print(f"Ocorrência encontrada: '{texto[inicio:fim]}' ")
+
+        # Atualiza a posição para continuar a busca após o termo encontrado
+        posicao += len(termo)
+
+# Função para gerar uma senha aleatória
+def gerador_senha():
+    # Solicita ao usuário o tamanho da senha
+    tamanho = int(input('Digite quantos caracteres a senha precisa ter: '))
+    # Define os caracteres possíveis para a senha
+    caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!?@#$%*"
+
+    # Gera a senha aleatória escolhendo caracteres aleatórios da lista
+    senha = ''.join(random.choice(caracteres) for _ in range(tamanho))
+
+    # Exibe a senha gerada
+    print(senha)
+
+# Função para contar a ocorrência de cada palavra em um texto
+def contagem_palavra():
+    # Solicita ao usuário que insira o texto a ser analisado
+    texto = input('Digite o texto que faremos a contagem de palavras: ')
+    # Divide o texto em palavras usando o espaço como delimitador
+    t = texto.split(' ')
+    # Dicionário para armazenar a contagem de cada palavra
+    contagem = {}
+
+    # Loop para contar as ocorrências de cada palavra
+    for palavra in t:
+        if palavra in contagem:
+            # Incrementa a contagem se a palavra já estiver no dicionário
+            contagem[palavra] += 1
+        else:
+            # Adiciona a palavra ao dicionário com contagem inicial de 1
+            contagem[palavra] = 1
+
+    # Exibe a contagem de palavras
+    print('Contagem de palavras: ')
+    for palavra, quantidade in contagem.items():
+        print(f'{palavra}: {quantidade}')
+
+# Módulo escola
+
+# Função para calcular a média aritmética das notas
+def media_aritmedica():
+    # Inicializa o contador de notas e a soma das notas
+    cont = 1
+    nota = 0
+
+    while True:
+        # Solicita ao usuário que insira uma nota
+        n = float(input(f'Digite a nota - {cont}: '))
+        # Adiciona a nota à soma total
+        nota += n
+        # Calcula a média aritmética atual
+        nota_final = nota / cont
+
+        # Pergunta ao usuário se deseja finalizar o cálculo
+        sair = input('Deseja finalizar o cálculo? (S/N) ').lower()
+        if sair == 's':
+            print('Finalizando...')
+            break
+
+        # Incrementa o contador de notas
+        cont += 1
+
+    # Exibe a média aritmética das notas fornecidas até o momento
+    print(f'A média aritmética das notas fornecidas é {nota_final:.2f}')
+
+# Função para calcular a média ponderada das notas
+def media_ponderada():
+    # Inicializa o contador de notas, a soma ponderada das notas e a soma dos pesos
+    cont = 1
+    nota = 0
+    peso = 0
+
+    while True:
+        # Solicita ao usuário que insira uma nota
+        n = float(input(f'Digite a nota - {cont}: '))
+        # Solicita ao usuário que insira o peso da nota
+        p = float(input(f'Qual o peso da nota - {cont}: '))
+        # Adiciona a nota ponderada à soma total das notas ponderadas
+        nota += n * p
+        # Adiciona o peso à soma total dos pesos
+        peso += p
+        # Calcula a média ponderada atual
+        resultado = nota / peso
+
+        # Pergunta ao usuário se deseja finalizar o cálculo da média ponderada
+        sair = input('Deseja finalizar o cálculo de média ponderada? (S/N) ').lower()
+        if sair == 's':
+            print('Finalizando...')
+            break
+
+        # Incrementa o contador de notas
+        cont += 1
+
+    # Exibe a média ponderada das notas fornecidas até o momento
+    print(f'A média ponderada das notas fornecidas é {resultado:.2f}')
+
+# Função para calcular a porcentagem de faltas de um aluno
+def faltas():
+    # Solicita ao usuário a carga horária total da disciplina
+    carga = int(input('Carga horária da disciplina? '))
+    # Solicita ao usuário a quantidade de horas/aulas por encontro
+    hora_aula = int(input('Quantidade de horas/aulas por encontro: '))
+    # Solicita ao usuário a quantidade de faltas do aluno
+    faltas = int(input('Quantidade de faltas: '))
+
+    # Calcula o número total de aulas
+    aulas = carga / hora_aula
+    # Calcula a porcentagem de faltas
+    porcentagem = (faltas / aulas) * 100
+    # Calcula o limite de faltas permitido (25% do total de aulas)
+    limite = aulas * 0.25
+    # Calcula quantas faltas ainda são permitidas
+    restantes = limite - faltas
+
+    # Verifica se o aluno ultrapassou o limite de faltas
+    if porcentagem > 25:
+        print('Esse aluno já atingiu ou ultrapassou o limite de faltas e está reprovado por falta')
+    else:
+        print(f'Este aluno pode faltar {restantes:.0f} dias sem ser reprovado')
+
+# Função para gerenciar a biblioteca
+def biblioteca():
+    # Lista para armazenar os livros cadastrados
+    livros = []
+    # Dicionário para armazenar a quantidade de livros por categoria
+    categorias = {}
+    # Solicita ao usuário a data atual no formato AAAAMMDD
+    data = int(input('Digite a data de hoje (formato AAAAMMDD): '))
+    # Dicionário para armazenar os livros em atraso por categoria
+    atrasos = {}
+
+    while True:
+        # Solicita ao usuário os detalhes do livro
+        titulo = input('Qual o título do livro: ')
+        isbn = int(input('Digite o ISBN do livro: '))
+        categoria = input('Em qual categoria ele se encaixa: ')
+        emprestimo = int(input('Digite a data de empréstimo deste título (formato AAAAMMDD): '))
+        devolucao = int(input('Digite a data prevista de devolução (formato AAAAMMDD): '))
+
+        # Cria um dicionário com os detalhes do livro e adiciona à lista de livros
+        livro = {'Titulo': titulo, 'ISBN': isbn, 'Categoria': categoria, 'Data do empréstimo': emprestimo, 'Data prevista devolução': devolucao}
+        livros.append(livro)
+
+        # Atualiza a quantidade de livros por categoria
+        if categoria in categorias:
+            categorias[categoria] += 1
+        else:
+            categorias[categoria] = 1
+
+        # Verifica se o livro está em atraso
+        if devolucao < data:
+            if categoria in atrasos:
+                atrasos[categoria]['quantidade'] += 1
+                atrasos[categoria]['livros'].append(livro)
+            else:
+                atrasos[categoria] = {'quantidade': 1, 'livros': [livro]}
+        
+        # Pergunta ao usuário se deseja cadastrar outro livro
+        continuar = input('Deseja cadastrar outro livro? (s/n): ').lower()
+        if continuar != 's':
+            break
+
+    # Exibe os livros cadastrados
+    print("Livros cadastrados:", livros)
+    # Exibe a quantidade de livros por categoria
+    print("Quantidade de livros por categoria:", categorias)
+    # Exibe a quantidade de livros em atraso por categoria
+    print("Quantidade de livros em atraso por categoria:", {cat: atrasos[cat]['quantidade'] for cat in atrasos})
+    
+    # Exibe os detalhes dos livros em atraso
+    print("Livros em atraso:")
+    for categoria in atrasos:
+        print(f"Categoria: {categoria}")
+        for livro in atrasos[categoria]['livros']:
+            print(f"- Título: {livro['Titulo']}, ISBN: {livro['ISBN']}")
+
+# Módulo miscelâneas
+
+# Função para codificar um texto multiplicando o valor ASCII de cada caractere por um número fornecido
+def codificar():
+    # Solicita ao usuário que insira o texto a ser codificado
+    texto = input('Digite o texto que será codificado: ')
+    # Solicita ao usuário que insira um número para a codificação
+    n = int(input('Digite um número: '))
+    # Lista para armazenar os valores codificados
+    codificar = []
+
+    # Loop para cada caractere no texto
+    for elemento in texto:
+        # Obtém o valor ASCII do caractere
+        ascii = ord(elemento)
+        # Multiplica o valor ASCII pelo número fornecido
+        cod = ascii * n
+        # Adiciona o valor codificado à lista como string
+        codificar.append(str(cod))
+
+    # Junta os valores codificados em uma única string, separados por espaços
+    codificado = ' '.join(codificar)
+    # Exibe o texto codificado
+    print(codificado)
+
+# Função para decodificar uma mensagem codificada
+def decodificar():
+    # Solicita ao usuário que insira a mensagem codificada
+    texto = input('Digite a mensagem codificada para ser decodificada: ')
+    # Solicita ao usuário que insira o número usado na codificação
+    n = int(input('Digite um número: '))
+    # Divide a mensagem codificada em partes usando espaços como delimitadores
+    codificados = texto.split()
+    # Lista para armazenar os caracteres decodificados
+    decodificar = []
+
+    # Loop para cada elemento na lista de partes codificadas
+    for elemento in codificados:
+        # Converte o elemento de volta para um número inteiro
+        ascii = int(elemento)
+        # Divide o valor pelo número fornecido para obter o valor ASCII original
+        dec = ascii // n
+        # Converte o valor ASCII de volta para um caractere
+        caractere = chr(dec)
+        # Adiciona o caractere decodificado à lista
+        decodificar.append(caractere)
+
+    # Junta os caracteres decodificados em uma única string
+    decodificado = ''.join(decodificar)
+    # Exibe a mensagem decodificada
+    print(decodificado)
+
+# Função para desenhar uma árvore de Natal
+def arvore_natal():
+    # Solicita ao usuário que insira o tamanho da árvore (número de linhas)
+    linhas = int(input('Digite o tamanho da árvore (número de linhas): '))
+
+    # Loop para desenhar cada linha da árvore
+    for cont in range(linhas):
+        # Desenha uma linha da árvore com espaços, barras e asteriscos
+        print(' ' * (linhas - cont - 1) + '/' + '*' * (2 * cont + 1) + '\\')
+
+    # Desenha o tronco da árvore
+    print(' ' * (linhas - 1) + '|')
+
+# Função para gerenciar uma playlist de músicas
+def playlist():
+    # Lista para armazenar as músicas
+    musicas = []
+
+    while True:
+        # Solicita ao usuário os detalhes da música
+        nome = input('Digite o nome da música: ')
+        artista = input('Digite o nome do artista: ')
+        album = input('Digite o álbum que essa música faz parte: ')
+        genero = input('Digite o gênero da música: ')
+        duracao = input('Digite a duração dessa música [ex.: 10:30]: ')
+
+        # Cria um dicionário com os detalhes da música e adiciona à lista
+        musica = {'Nome': nome, 'Artista': artista, 'Álbum': album, 'Gênero': genero, 'Duração': duracao}
+        musicas.append(musica)
+
+        # Pergunta ao usuário se deseja finalizar a organização da playlist
+        continuar = input('Deseja finalizar a organização da playlist? (s/n): ').lower()
+        if continuar == 's':
+            break
+
+    # Solicita ao usuário a ordem de visualização das músicas
+    ordem = int(input('''Qual ordem deseja visualizar suas músicas:
+    1 - nome da música
+    2 - artista
+    3 - álbum
+    4 - gênero
+    5 - duração
+    ''' ))
+
+    # Ordena a lista de músicas com base na escolha do usuário
+    if ordem == 1:
+        musicas.sort(key=lambda x: x['Nome'])
+    elif ordem == 2:
+        musicas.sort(key=lambda x: x['Artista'])
+    elif ordem == 3:
+        musicas.sort(key=lambda x: x['Álbum'])
+    elif ordem == 4:
+        musicas.sort(key=lambda x: x['Gênero'])
+    elif ordem == 5:
+        # Função para converter a duração da música em segundos
+        def duracao_em_segundos(duracao):
+            minutos, segundos = map(int, duracao.split(':'))
+            return minutos * 60 + segundos
+        
+        # Ordena a lista de músicas pela duração em segundos
+        musicas.sort(key=lambda x: duracao_em_segundos(x['Duração']))
+    else:
+        # Mensagem de erro para escolha inválida
+        print('Escolha inválida. Por favor, selecione uma opção entre 1 e 5')
+
+    # Exibe a lista de músicas organizada
+    for musica in musicas:
+        print(f"Nome: {musica['Nome']}, Artista: {musica['Artista']}, Álbum: {musica['Álbum']}, Gênero: {musica['Gênero']}, Duração: {musica['Duração']}")
 
 # Chama a função principal do menu
 menu()
