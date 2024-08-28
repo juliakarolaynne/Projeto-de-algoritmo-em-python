@@ -1,10 +1,17 @@
 # Importa o módulo random, que contém funções para gerar números aleatórios
 import random
 
+# Atalhos para cores
+r = '\033[31m'  # Vermelho
+g = '\033[32m'  # Verde
+b = '\033[34m'  # Azul
+y = '\033[33m'  # Amarelo
+rs = '\033[0;0m'  # Resetar cor
+
 # Função principal do menu
 def menu():
   # Exibe as opções de módulos disponíveis
-  print('''Para começar escolhar um dos módulos a seguir de acordo com a funcionalidade que deseja no momento:
+    print(f'''Para começar escolhar um dos módulos a seguir de acordo com a funcionalidade que deseja no momento:
 
   1 - Matemática
     -> Operações simples
@@ -29,22 +36,11 @@ def menu():
     -> Decodificar mensagem
     -> Gerar árvore de Natal
     -> Ordenar playlist
+          
+    {y} Digite 0 para sair. {rs}     
   ''')
-  # Solicita ao usuário que escolha um módulo
-  escolha = int(input("Digite o número do modulo: "))
-
-  # Chama a função correspondente ao módulo escolhido
-  if escolha == 1:
-    menu_matematica()
-  elif escolha == 2:
-    menu_texto()
-  elif escolha == 3:
-    menu_escola()
-  elif escolha == 4:
-    menu_miscelaneas()
-  else:
-    # Mensagem de erro para escolha inválida
-    print('Opção inválida...')
+    # Solicita ao usuário que escolha um módulo
+    return int(input("Digite o número do modulo: "))
 
 # Função do menu de matemática
 def menu_matematica():
@@ -76,7 +72,7 @@ def menu_matematica():
     orcamento_mensal()
   else:
     # Mensagem de erro para escolha inválida
-    print("Opção inválida...")
+    print(f"{r} Opção inválida...{rs}")
 
 # Função do menu de texto
 def menu_texto():
@@ -104,7 +100,7 @@ def menu_texto():
         contagem_palavra()
     else:
         # Mensagem de erro para escolha inválida
-        print("Opção inválida...")
+        print(f"{r} Opção inválida...{rs}")
 
 # Função do menu de escola
 def menu_escola():
@@ -129,7 +125,7 @@ def menu_escola():
        biblioteca()
     else:
        # Mensagem de erro para escolha inválida
-       print('Opção inválida...')
+       print(f"{r} Opção inválida...{rs}")
 
 # Função do menu de miscelâleas
 def menu_miscelaneas():
@@ -154,45 +150,54 @@ def menu_miscelaneas():
        playlist()
     else:
        # Mensagem de erro para escolha inválida
-       print('Opção inválida...')
+       print(f"{r} Opção inválida...{rs}")
         
 # Módulo Matemática
 
 # Função para realizar operações simples
 def operacoes_simples():
+    # Loop infinito para manter o programa executando até que o usuário escolha sair
     while True:
-        # Solicita ao usuário que escolha uma operação
-        operacao = int(input('''Qual operação deseja realizar:
+        try:
+            # Exibe o menu de operações e solicita que o usuário escolha uma
+            operacao = int(input('''Qual operação deseja realizar:
 
-        1 - somar
-        2 - subtrair
-        3 - multiplicar
-        4 - dividir
-        5 - sair
+            1 - somar
+            2 - subtrair
+            3 - multiplicar
+            4 - dividir
+            5 - sair
 
-        '''))
+            '''))
 
-        # Verifica se o usuário deseja sair
-        if operacao == 5:
-            print('Saindo...')
-            break
+            # Verifica se o usuário deseja sair
+            if operacao == 5:
+                print('Saindo...')
+                break
+            # Verifica se a operação escolhida é inválida
+            elif operacao not in [1, 2, 3, 4]:
+                print('Operação invalida. Tente novamente.')
+                continue # Retorna ao início do loop para o usuário escolher novamente
 
-        # Solicita os valores para a operação
-        valor = int(input('Digite o primeiro valor a ser realizada operação: '))
-        valor2 = int(input('Digite o segundo valor a ser realizada operação: '))
+            # Solicita os valores para a operação
+            valor = float(input('Digite o primeiro valor a ser realizada operação: '))
+            valor2 = float(input('Digite o segundo valor a ser realizada operação: '))
 
-        # Realiza a operação escolhida e exibe o resultado
-        if operacao == 1:
-            print('Resultado: ', valor + valor2)
-        elif operacao == 2:
-            print('Resultado: ', valor - valor2)
-        elif operacao == 3:
-            print('Resultado: ', valor * valor2)
-        elif operacao == 4:
-            print('Resultado: ', valor / valor2)
-        else:
-            # Mensagem de erro para escolha inválida
-            print('Algo deu errado, tente novamente...')
+            # Realiza a operação escolhida e exibe o resultado
+            if operacao == 1:
+                print('Resultado: ', valor + valor2)
+            elif operacao == 2:
+                print('Resultado: ', valor - valor2)
+            elif operacao == 3: 
+                print('Resultado: ', valor * valor2)
+            elif operacao == 4:
+                try:
+                    print('Resultado: ', valor / valor2)
+                except ZeroDivisionError: # Trata o erro de divisão por zero
+                    print('Erro: Divisão por zero não é permitida.')
+        # Trata o erro de entrada inválida (quando o usuário insere algo que não é número)
+        except ValueError:
+            print("Entrada inválida! Por favor, insira um número.")
 
 # Função para exibir a tabuada de um número
 def tabuada():
@@ -232,7 +237,7 @@ def fibonacci():
 
     # Calcula os termos da sequência até o n-ésimo termo
     for i in range(2, n):
-        proximo_termo = sequencia[-1] + sequencia[-2]
+        proximo_termo = sequencia[-1] + sequencia[-2] # Soma os dois últimos termos
         sequencia.append(proximo_termo)
 
     # Exibe a sequência de Fibonacci
@@ -387,18 +392,27 @@ def recorte_texto():
         # Atualiza a posição para continuar a busca após o termo encontrado
         posicao += len(termo)
 
+        # Pergunta ao usuário se deseja continuar a busca
+        continuar = input("Deseja continuar buscando? (S/N): ").lower()
+        if continuar == 'n':
+            break
+
 # Função para gerar uma senha aleatória
 def gerador_senha():
-    # Solicita ao usuário o tamanho da senha
-    tamanho = int(input('Digite quantos caracteres a senha precisa ter: '))
-    # Define os caracteres possíveis para a senha
-    caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!?@#$%*"
+    try:
+        # Solicita ao usuário o tamanho da senha
+        tamanho = int(input('Digite quantos caracteres a senha precisa ter: '))
+        # Define os caracteres possíveis para a senha
+        caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!?@#$%*"
 
-    # Gera a senha aleatória escolhendo caracteres aleatórios da lista
-    senha = ''.join(random.choice(caracteres) for _ in range(tamanho))
+        # Gera a senha aleatória escolhendo caracteres aleatórios da lista
+        senha = ''.join(random.choice(caracteres) for _ in range(tamanho))
 
-    # Exibe a senha gerada
-    print(senha)
+        # Exibe a senha gerada
+        print(senha)
+    except ValueError:
+        # Trata o erro de entrada inválida (quando o usuário insere algo que não é número)
+        print('Entrada inválida! Por favor, insira um número.')
 
 # Função para contar a ocorrência de cada palavra em um texto
 def contagem_palavra():
@@ -425,19 +439,43 @@ def contagem_palavra():
 
 # Módulo escola
 
+# Função para validar a entrada de notas
+def validar_float(mensagem):
+    while True:
+        try:
+            valor = float(input(mensagem))
+            # Verifica se o valor está dentro do intervalo permitido
+            if valor < 0 or valor > 10:
+                print('Por favor, insira uma nota válida entre 0 e 10.')
+            else:
+                return valor
+        except ValueError:
+            # Trata o erro de entrada inválida (não numérica)
+            print('Entrada inválida. Digite um número válido.')
+
+# Função para validar entradas inteiras
+def validar_int(mensagem):
+    while True:
+        try:
+            valor = int(input(mensagem))
+            return valor
+        except ValueError:
+            # Trata o erro de entrada inválida (não numérica)
+            print('Entrada inválida. Digite um número inteiro válido.')
+
 # Função para calcular a média aritmética das notas
 def media_aritmedica():
     # Inicializa o contador de notas e a soma das notas
     cont = 1
-    nota = 0
+    soma_nota = 0
 
     while True:
         # Solicita ao usuário que insira uma nota
-        n = float(input(f'Digite a nota - {cont}: '))
+        nota = validar_float(f'Digite a nota - {cont}: ')
         # Adiciona a nota à soma total
-        nota += n
+        soma_nota += nota
         # Calcula a média aritmética atual
-        nota_final = nota / cont
+        nota_final = soma_nota / cont
 
         # Pergunta ao usuário se deseja finalizar o cálculo
         sair = input('Deseja finalizar o cálculo? (S/N) ').lower()
@@ -447,7 +485,7 @@ def media_aritmedica():
 
         # Incrementa o contador de notas
         cont += 1
-
+    
     # Exibe a média aritmética das notas fornecidas até o momento
     print(f'A média aritmética das notas fornecidas é {nota_final:.2f}')
 
@@ -455,20 +493,20 @@ def media_aritmedica():
 def media_ponderada():
     # Inicializa o contador de notas, a soma ponderada das notas e a soma dos pesos
     cont = 1
-    nota = 0
-    peso = 0
+    soma_nota = 0
+    soma_peso = 0
 
     while True:
         # Solicita ao usuário que insira uma nota
-        n = float(input(f'Digite a nota - {cont}: '))
+        nota = validar_float(f'Digite a nota - {cont}: ')
         # Solicita ao usuário que insira o peso da nota
-        p = float(input(f'Qual o peso da nota - {cont}: '))
+        peso = validar_float(f'Qual o peso da nota - {cont}: ')
         # Adiciona a nota ponderada à soma total das notas ponderadas
-        nota += n * p
+        soma_nota += nota * peso
         # Adiciona o peso à soma total dos pesos
-        peso += p
+        soma_peso += peso
         # Calcula a média ponderada atual
-        resultado = nota / peso
+        media = soma_nota / soma_peso
 
         # Pergunta ao usuário se deseja finalizar o cálculo da média ponderada
         sair = input('Deseja finalizar o cálculo de média ponderada? (S/N) ').lower()
@@ -480,16 +518,16 @@ def media_ponderada():
         cont += 1
 
     # Exibe a média ponderada das notas fornecidas até o momento
-    print(f'A média ponderada das notas fornecidas é {resultado:.2f}')
+    print(f'A média ponderada das notas fornecidas é {media:.2f}')
 
 # Função para calcular a porcentagem de faltas de um aluno
 def faltas():
     # Solicita ao usuário a carga horária total da disciplina
-    carga = int(input('Carga horária da disciplina? '))
+    carga = validar_int('Carga horária da disciplina? ')
     # Solicita ao usuário a quantidade de horas/aulas por encontro
-    hora_aula = int(input('Quantidade de horas/aulas por encontro: '))
+    hora_aula = validar_int('Quantidade de horas/aulas por encontro: ')
     # Solicita ao usuário a quantidade de faltas do aluno
-    faltas = int(input('Quantidade de faltas: '))
+    faltas = validar_int('Quantidade de faltas: ')
 
     # Calcula o número total de aulas
     aulas = carga / hora_aula
@@ -513,17 +551,17 @@ def biblioteca():
     # Dicionário para armazenar a quantidade de livros por categoria
     categorias = {}
     # Solicita ao usuário a data atual no formato AAAAMMDD
-    data = int(input('Digite a data de hoje (formato AAAAMMDD): '))
+    data = validar_int('Digite a data de hoje (formato AAAAMMDD): ')
     # Dicionário para armazenar os livros em atraso por categoria
     atrasos = {}
 
     while True:
         # Solicita ao usuário os detalhes do livro
         titulo = input('Qual o título do livro: ')
-        isbn = int(input('Digite o ISBN do livro: '))
+        isbn = validar_int('Digite o ISBN do livro: ')
         categoria = input('Em qual categoria ele se encaixa: ')
-        emprestimo = int(input('Digite a data de empréstimo deste título (formato AAAAMMDD): '))
-        devolucao = int(input('Digite a data prevista de devolução (formato AAAAMMDD): '))
+        emprestimo = validar_int('Digite a data de empréstimo deste título (formato AAAAMMDD): ')
+        devolucao = validar_int('Digite a data prevista de devolução (formato AAAAMMDD): ')
 
         # Cria um dicionário com os detalhes do livro e adiciona à lista de livros
         livro = {'Titulo': titulo, 'ISBN': isbn, 'Categoria': categoria, 'Data do empréstimo': emprestimo, 'Data prevista devolução': devolucao}
@@ -564,12 +602,37 @@ def biblioteca():
 
 # Módulo miscelâneas
 
-# Função para codificar um texto multiplicando o valor ASCII de cada caractere por um número fornecido
+# Função para validar o formato de duração da música
+def validar_duracao(mensagem):
+    while True:
+        # Solicita ao usuário que insira a duração da música
+        duracao = input(mensagem)
+        # Divide a entrada em partes usando ':' como delimitador
+        partes = duracao.split(':')
+
+        # Verifica se a duração está no formato MM:SS
+        if len(partes) == 2:
+            minutos, segundos = partes
+
+            # Verifica se ambas as partes são números
+            if minutos.isdigit() and segundos.isdigit():
+                minutos = int(minutos)
+                segundos = int(segundos)
+
+                # Verifica se segundos estão no intervalo correto (0 a 59) e minutos são não negativos
+                # Também pode adicionar uma verificação para limitar minutos a um intervalo razoável, se desejado
+                if 0 <= segundos < 60 and minutos >= 0:
+                    return duracao
+                
+        # Mensagem de erro para duração inválida
+        print('Duração inválida. Por favor, insira no formato MM:SS onde MM e SS são valores não negativos e SS < 60.')
+
+# Função para codificar um texto
 def codificar():
     # Solicita ao usuário que insira o texto a ser codificado
     texto = input('Digite o texto que será codificado: ')
     # Solicita ao usuário que insira um número para a codificação
-    n = int(input('Digite um número: '))
+    n = validar_int('Digite um número: ')
     # Lista para armazenar os valores codificados
     codificar = []
 
@@ -592,7 +655,7 @@ def decodificar():
     # Solicita ao usuário que insira a mensagem codificada
     texto = input('Digite a mensagem codificada para ser decodificada: ')
     # Solicita ao usuário que insira o número usado na codificação
-    n = int(input('Digite um número: '))
+    n = validar_int('Digite um número: ')
     # Divide a mensagem codificada em partes usando espaços como delimitadores
     codificados = texto.split()
     # Lista para armazenar os caracteres decodificados
@@ -617,7 +680,7 @@ def decodificar():
 # Função para desenhar uma árvore de Natal
 def arvore_natal():
     # Solicita ao usuário que insira o tamanho da árvore (número de linhas)
-    linhas = int(input('Digite o tamanho da árvore (número de linhas): '))
+    linhas = validar_int('Digite o tamanho da árvore (número de linhas): ')
 
     # Loop para desenhar cada linha da árvore
     for cont in range(linhas):
@@ -638,7 +701,7 @@ def playlist():
         artista = input('Digite o nome do artista: ')
         album = input('Digite o álbum que essa música faz parte: ')
         genero = input('Digite o gênero da música: ')
-        duracao = input('Digite a duração dessa música [ex.: 10:30]: ')
+        duracao = validar_duracao('Digite a duração dessa música [ex.: 10:30]: ')
 
         # Cria um dicionário com os detalhes da música e adiciona à lista
         musica = {'Nome': nome, 'Artista': artista, 'Álbum': album, 'Gênero': genero, 'Duração': duracao}
@@ -649,39 +712,67 @@ def playlist():
         if continuar == 's':
             break
 
-    # Solicita ao usuário a ordem de visualização das músicas
-    ordem = int(input('''Qual ordem deseja visualizar suas músicas:
-    1 - nome da música
-    2 - artista
-    3 - álbum
-    4 - gênero
-    5 - duração
-    ''' ))
+    while True:
+        try:
+            # Solicita ao usuário a ordem de visualização das músicas
+            ordem = int(input('''Qual ordem deseja visualizar suas músicas:
+            1 - nome da música
+            2 - artista
+            3 - álbum
+            4 - gênero
+            5 - duração
+            ''' ))
 
-    # Ordena a lista de músicas com base na escolha do usuário
-    if ordem == 1:
-        musicas.sort(key=lambda x: x['Nome'])
-    elif ordem == 2:
-        musicas.sort(key=lambda x: x['Artista'])
-    elif ordem == 3:
-        musicas.sort(key=lambda x: x['Álbum'])
-    elif ordem == 4:
-        musicas.sort(key=lambda x: x['Gênero'])
-    elif ordem == 5:
-        # Função para converter a duração da música em segundos
-        def duracao_em_segundos(duracao):
-            minutos, segundos = map(int, duracao.split(':'))
-            return minutos * 60 + segundos
-        
-        # Ordena a lista de músicas pela duração em segundos
-        musicas.sort(key=lambda x: duracao_em_segundos(x['Duração']))
-    else:
-        # Mensagem de erro para escolha inválida
-        print('Escolha inválida. Por favor, selecione uma opção entre 1 e 5')
+            # Ordena a lista de músicas com base na escolha do usuário
+            if ordem == 1:
+                musicas.sort(key=lambda x: x['Nome'])
+            elif    ordem == 2:
+                musicas.sort(key=lambda x: x['Artista'])
+            elif    ordem == 3:
+                musicas.sort(key=lambda x: x['Álbum'])
+            elif    ordem == 4:
+                musicas.sort(key=lambda x: x['Gênero'])
+            elif    ordem == 5:
+                # Função para converter a duração da música em segundos
+                def duracao_em_segundos(duracao):
+                    minutos, segundos = map(int, duracao.split(':'))
+                    return minutos * 60 + segundos
 
-    # Exibe a lista de músicas organizada
-    for musica in musicas:
-        print(f"Nome: {musica['Nome']}, Artista: {musica['Artista']}, Álbum: {musica['Álbum']}, Gênero: {musica['Gênero']}, Duração: {musica['Duração']}")
+                # Ordena a lista de músicas pela duração em segundos
+                musicas.sort(key=lambda x: duracao_em_segundos(x['Duração']))
+            else:
+                # Levanta uma exceção para escolha inválida
+                raise ValueError
+        except ValueError:
+            # Mensagem de erro para escolha inválida
+            print('Escolha inválida. Por favor, selecione uma opção entre 1 e 5')
 
-# Chama a função principal do menu
-menu()
+        # Exibe a lista de músicas organizada
+        for musica in musicas:
+            print(f"Nome: {musica['Nome']}, Artista: {musica['Artista']}, Álbum: {musica['Álbum']}, Gênero: {musica['Gênero']}, Duração: {musica['Duração']}")
+
+
+# Main do projeto
+# Inicializa a escolha com um valor diferente de 0 para entrar no loop
+escolha = -1
+
+# Chama o menu até a pessoa dizer que quer sair. Para sair, deve-se digitar 0
+while escolha != 0:
+    escolha = menu()  # Chama a função menu e atribui a escolha
+
+    # Verifica se a escolha está dentro do intervalo permitido
+    if escolha < 0 or escolha > 4:
+        print(f"{r}Opção inválida{rs}")  # Mensagem de erro para opção inválida
+    elif escolha == 0:
+        print('Saindo...')
+    elif escolha == 1:
+        menu_matematica()  # Chama a função correspondente ao módulo de matemática
+    elif escolha == 2:
+        menu_texto()  # Chama a função correspondente ao módulo de texto
+    elif escolha == 3:
+        menu_escola()  # Chama a função correspondente ao módulo de escola
+    elif escolha == 4:
+        menu_miscelaneas()  # Chama a função correspondente ao módulo de miscelâneas
+
+    # Pausa para o usuário pressionar ENTER antes de continuar
+    input('\n\t Tecle ENTER para continuar')
